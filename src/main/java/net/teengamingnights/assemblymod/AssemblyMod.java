@@ -1,5 +1,6 @@
 package net.teengamingnights.assemblymod;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class AssemblyMod extends JavaPlugin {
@@ -10,5 +11,6 @@ public class AssemblyMod extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
+        Bukkit.getPluginManager().registerEvents(new EventHandle(), this);
     }
 }
