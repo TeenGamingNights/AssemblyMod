@@ -2,6 +2,7 @@ package net.teengamingnights.assemblymod;
 
 import net.teengamingnights.assemblymod.factory.FactoryManager;
 import net.teengamingnights.assemblymod.factory.TestFactory;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 

@@ -1,12 +1,13 @@
 package net.teengamingnights.assemblymod;
 
-import net.teengamingnights.assemblymod.factory.FactoryManager;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
-import org.bukkit.craftbukkit.v1_13_R2.block.CraftChest;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -77,12 +78,5 @@ public class EventHandle implements Listener {
                     return right;
         }
         return null;
-    }
-
-    private boolean hasValidMaterials(List<Block> blocks) {
-        List<Material> materials = new ArrayList<>();
-        for (Block b : blocks)
-            materials.add(b.getType());
-        return materials.contains(Material.FURNACE) && materials.contains(Material.CHEST);
     }
 }
