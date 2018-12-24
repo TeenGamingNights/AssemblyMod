@@ -1,11 +1,12 @@
 package net.teengamingnights.assemblymod.config.impl;
 
-class Database {
+public class Database {
     private String host;
     private int port;
     private String username;
     private String password;
     private String database;
+    private DatabasePool pool;
 
     public String getHost() {
         return host;
@@ -25,5 +26,9 @@ class Database {
 
     public String getDatabase() {
         return database;
+    }
+
+    public DatabasePool getPool() {
+        return pool;
     }
 }

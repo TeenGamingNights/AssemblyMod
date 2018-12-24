@@ -4,3 +4,6 @@ port=3306
 username=""
 password=""
 database="assemblymod"
+  [database.pool]
+  threads=4
+  maxIdle=4
