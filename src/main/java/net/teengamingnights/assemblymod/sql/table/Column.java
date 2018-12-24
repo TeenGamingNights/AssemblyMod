@@ -6,8 +6,8 @@ public class Column<T> {
 
     private final String name;
     private final Datatype<T> datatype;
-    private final boolean isPrimaryKey;
-    private final boolean isUnique;
+    private boolean isPrimaryKey;
+    private boolean isUnique;
 
     public Column(String name, Datatype<T> datatype) {
         this.name = name;
@@ -21,5 +21,15 @@ public class Column<T> {
         this.datatype = datatype;
         this.isPrimaryKey = isPrimaryKey;
         this.isUnique = isUnique;
+    }
+
+    public Column<T> primaryKey() {
+        this.isPrimaryKey = true;
+        return this;
+    }
+
+    public Column<T> unique() {
+        this.isUnique = true;
+        return this;
     }
 }
