@@ -1,24 +1,36 @@
 package net.teengamingnights.assemblymod;
 
+import net.teengamingnights.assemblymod.config.ConfigWrapper;
+import net.teengamingnights.assemblymod.config.TOMLWrapper;
+import net.teengamingnights.assemblymod.config.impl.Config;
 import net.teengamingnights.assemblymod.factory.FactoryManager;
-import net.teengamingnights.assemblymod.factory.TestFactory;
 
 import net.teengamingnights.assemblymod.listeners.InteractListener;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.IOException;
 
 public class AssemblyMod extends JavaPlugin {
 
-    private AssemblyMod instance;
     private FactoryManager factoryManager;
+
+    private Config config;
 
     @Override
     public void onEnable() {
-        instance = this;
+        try {
+            ConfigWrapper configWrapper = new ConfigWrapper(this);
+            configWrapper.load();
+            config = configWrapper.getInstance();
+        } catch(IOException ex) {
+            ex.printStackTrace();
+            System.exit(1);
+        }
+
         factoryManager = new FactoryManager();
 
-        saveDefaultConfig();
-        Bukkit.getPluginManager().registerEvents(new InteractListener(), this);
-        factoryManager.registerFactory(new TestFactory());
+        Bukkit.getPluginManager().registerEvents(new InteractListener(factoryManager), this);
     }
 }

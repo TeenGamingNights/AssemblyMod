@@ -24,4 +24,6 @@ repositories {
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
+
+    compile 'com.moandjiezana.toml:toml4j:0.7.2'
 }
