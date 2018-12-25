@@ -1,46 +1,52 @@
-package net.teengamingnights.assemblymod;
+package net.teengamingnights.assemblymod.listeners;
 
+import net.teengamingnights.assemblymod.factory.BlockType;
+import net.teengamingnights.assemblymod.factory.FaceDirection;
+import net.teengamingnights.assemblymod.factory.FactoryManager;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class EventHandle implements Listener {
-    private enum BlockType { FURNACE, CHEST }
-    private enum FaceDirection { NS, EW }
+public class InteractListener implements Listener {
+
+    private FactoryManager factoryManager;
+
+    public InteractListener(FactoryManager factoryManager) {
+        this.factoryManager = factoryManager;
+    }
 
     @EventHandler
     public void onPlayerClick(PlayerInteractEvent e) {
-        Player p = e.getPlayer();
         Block b = e.getClickedBlock();
         BlockFace face = e.getBlockFace();
+
         if (b.getType() == Material.CRAFTING_TABLE) {
-            Block furnace = null;
-            Block chest = null;
+            Block furnace;
+            Block chest;
             if (face == BlockFace.NORTH || face == BlockFace.SOUTH) {
-                furnace = furnaceOrChest(FaceDirection.NS, BlockType.FURNACE, b);
-                chest = furnaceOrChest(FaceDirection.NS, BlockType.CHEST, b);
+                furnace = furnaceOrChest(FaceDirection.Y, BlockType.FURNACE, b);
+                chest = furnaceOrChest(FaceDirection.Y, BlockType.CHEST, b);
             } else if (face == BlockFace.EAST || face == BlockFace.WEST) {
-                furnace = furnaceOrChest(FaceDirection.EW, BlockType.FURNACE, b);
-                chest = furnaceOrChest(FaceDirection.EW, BlockType.CHEST, b);
-            } else
+                furnace = furnaceOrChest(FaceDirection.X, BlockType.FURNACE, b);
+                chest = furnaceOrChest(FaceDirection.X, BlockType.CHEST, b);
+            } else {
                 return;
+            }
+
             if ((furnace != null && chest != null) && furnace != chest) {
-                List<ItemStack> items = Arrays.asList(((Chest)(chest.getState())).getBlockInventory().getContents());
-                AssemblyMod.getFactoryManager().createFactory(items, b);
+                Chest chestInstance = (Chest) chest.getState();
+                List<ItemStack> items = Arrays.asList(chestInstance.getBlockInventory().getContents());
+                factoryManager.createFactory(items, b);
             }
         }
     }
@@ -50,14 +56,16 @@ public class EventHandle implements Listener {
         int x = center.getX();
         int y = center.getY();
         int z = center.getZ();
+
         Block left;
         Block right;
+
         switch (direction) {
-            case NS:
+            case Y:
                 left = w.getBlockAt(x + 1, y, z);
                 right = w.getBlockAt(x - 1, y, z);
                 break;
-            case EW:
+            case X:
                 left = w.getBlockAt(x, y, z + 1);
                 right = w.getBlockAt(x, y, z - 1);
                 break;

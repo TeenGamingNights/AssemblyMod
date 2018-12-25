@@ -1,5 +1,6 @@
 package net.teengamingnights.assemblymod.factory;
 
+import net.teengamingnights.assemblymod.factory.Factory;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

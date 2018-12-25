@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class FactoryManager {
+
     private List<Factory> factories = new ArrayList<>();
 
     public Factory[] getRegisteredFactories() {
@@ -16,8 +17,13 @@ public class FactoryManager {
         return ret;
     }
 
-    public void registerFactory(Factory factory) { factories.add(factory); }
-    public void unregisterFactory(Factory factory) { factories.remove(factory); }
+    public void registerFactory(Factory factory) {
+        factories.add(factory);
+    }
+
+    public void unregisterFactory(Factory factory) {
+        factories.remove(factory);
+    }
 
     public void createFactory(List<ItemStack> items, Block center) {
         items = new ArrayList<>(items);
