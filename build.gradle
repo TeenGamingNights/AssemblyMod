@@ -40,6 +40,7 @@ dependencies {
 
     // Other libraries
     compile 'com.moandjiezana.toml:toml4j:0.7.2'
+    compile 'org.json:json:20180813'
 }
 
 compileKotlin {
