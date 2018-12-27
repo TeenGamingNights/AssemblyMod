@@ -22,6 +22,8 @@ public class TOMLWrapper<T> {
     }
 
     public void load() throws IOException {
+        if(!pl.getDataFolder().exists()) pl.getDataFolder().mkdir();
+
         String fileName = Optional.of(getClass().getAnnotation(FileName.class).fileName()).orElse("config.toml");
         file = new File(pl.getDataFolder(), fileName);
 
