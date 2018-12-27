@@ -2,14 +2,24 @@ package net.teengamingnights.assemblymod.sql
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import net.teengamingnights.assemblymod.config.impl.Config
+import net.teengamingnights.assemblymod.sql.tables.FactoryRecipesStore
+import net.teengamingnights.assemblymod.sql.tables.FactoryStore
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
 import java.io.IOException
 import javax.sql.DataSource
 
+@ExperimentalCoroutinesApi
 class SQLManager(val config: Config) : Runnable {
 
     private lateinit var ds: DataSource
+
+    private val tables = listOf(
+            FactoryRecipesStore,
+            FactoryStore
+    )
 
     @Throws(IOException::class)
     override fun run() {
@@ -35,5 +45,7 @@ class SQLManager(val config: Config) : Runnable {
         ds = HikariDataSource(dsConfig)
 
         Database.connect(ds)
+
+        SchemaUtils.createMissingTablesAndColumns(*tables.map(DataStore::instance).toTypedArray())
     }
 }
