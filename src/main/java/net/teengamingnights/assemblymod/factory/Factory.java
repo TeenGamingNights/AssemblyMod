@@ -11,6 +11,10 @@ public interface Factory {
 
     Location getCenter();
 
+    Location getFurnace();
+
+    Location getChest();
+
     FactoryType getType();
 
     double getHealth();
