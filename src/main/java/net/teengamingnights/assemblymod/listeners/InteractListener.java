@@ -58,7 +58,7 @@ public class InteractListener implements Listener {
                 break;
 
             case FURNACE:
-                turnOnFactory();
+                toggleFactory();
                 break;
 
             case CHEST:
@@ -91,7 +91,7 @@ public class InteractListener implements Listener {
 
     }
 
-    private void turnOnFactory() {
+    private void toggleFactory() {
 
         // TODO: stub method - have to implement click behavior later
         return;
