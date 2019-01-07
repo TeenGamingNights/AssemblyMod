@@ -36,7 +36,7 @@ dependencies {
     compile 'com.zaxxer:HikariCP:3.2.0'
 
     // Spigot
-    compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
+    compile 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
 
     // Other libraries
     compile 'com.moandjiezana.toml:toml4j:0.7.2'
