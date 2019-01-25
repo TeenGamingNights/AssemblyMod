@@ -1,5 +1,6 @@
 package net.teengamingnights.assemblymod.listeners;
 
+import net.teengamingnights.assemblymod.factory.Factory;
 import net.teengamingnights.assemblymod.factory.FactoryManager;
 import net.teengamingnights.assemblymod.utils.blocks.BlockUtil;
 import net.teengamingnights.assemblymod.utils.blocks.FaceDirection;
@@ -11,6 +12,7 @@ import org.bukkit.block.Furnace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -26,7 +28,6 @@ public class InteractListener implements Listener {
 
     @EventHandler
     public void onPlayerClick(PlayerInteractEvent e) {
-
         /*
          Simplified and solidified logic (hopefully) on what is a factory,
          and moved it over to it's own class with a bunch of other helpful methods
@@ -69,11 +70,22 @@ public class InteractListener implements Listener {
                 break;
                 
         }
+    }
 
+    // I don't know the performance impact of this... Scouring a factory every time
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent e) {
+        Block block = e.getBlock();
+        boolean notFacBlock = !factoryManager.isBlockFacPart(block);
+
+        if (notFacBlock) return;
+
+        Factory brokenFac = factoryManager.getFactory(block);
+
+        factoryManager.unregisterFactory(brokenFac);
     }
 
     private void createFactory(Block center, BlockFace clickedFace) {
-
         FaceDirection faceD = FaceDirection.getEquivalent(clickedFace);
         EnumSet<BlockFace> oppositeBFS = faceD.getOppositeBFS();
 
@@ -84,28 +96,23 @@ public class InteractListener implements Listener {
 
         if (BlockUtil.isAttemptedFactory(center, clickedFace)) {
 
-            if (factoryManager.isBlockFac(center)) return;
+            if (factoryManager.isBlockFacPart(center)) return;
 
             Chest chestInstance = BlockUtil.getRelativeChests(center, oppositeBFS).get(0);
             Furnace furnInstance = BlockUtil.getRelativeFurns(center, oppositeBFS).get(0);
             factoryManager.createFactory(center, chestInstance, furnInstance);
 
         }
-
     }
 
     private void toggleFactory() {
-
         // TODO: stub method - have to implement click behavior later
         return;
-
     }
 
     private void viewRecipes() {
-
         // TODO: stub method - have to implement click behavior later
         return;
-
     }
 
 }

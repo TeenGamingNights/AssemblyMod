@@ -1,6 +1,5 @@
 package net.teengamingnights.assemblymod.factory;
 
-import net.teengamingnights.assemblymod.utils.CollectionUtils;
 import net.teengamingnights.assemblymod.utils.items.ItemsUtil;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -12,9 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class FactoryManager {
 
@@ -71,7 +68,6 @@ public class FactoryManager {
         // Get factories with requirements matching those found in the chest.
         // If there are no factories that match, or more than 1, return because that shouldn't happen.
         List<FactoryType> suitables = factoryTypes
-                .clone()
                 .parallelStream()
                 .filter(type -> requirementsMet(type, fItems))
                 .collect(Collectors.toList());

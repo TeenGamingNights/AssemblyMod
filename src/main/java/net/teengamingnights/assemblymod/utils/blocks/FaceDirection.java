@@ -23,32 +23,24 @@ public enum FaceDirection {
     }
 
     public static FaceDirection getEquivalent(BlockFace face) {
-
         for (FaceDirection dir : FaceDirection.values()) {
             if (dir.getBlockFaces().contains(face)) return dir;
         }
 
         // Non-cardinal directions are treated as if they are EW
         return X;
-
     }
 
     public EnumSet<BlockFace> getBlockFaces() {
-
         return EnumSet.of(this.firstEqual, this.lastEqual);
-
     }
 
     public EnumSet<BlockFace> getOppositeBFS() {
-
         return EnumSet.of(getOpposite().firstEqual, getOpposite().lastEqual);
-
     }
 
     public FaceDirection getOpposite() {
-
         return this.equals(X) ? Y : X;
-
     }
 
 }

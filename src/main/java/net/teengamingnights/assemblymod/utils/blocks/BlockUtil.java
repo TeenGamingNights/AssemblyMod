@@ -14,7 +14,6 @@ public class BlockUtil {
             = EnumSet.of(Material.FURNACE, Material.CRAFTING_TABLE, Material.CHEST);
 
     public static boolean isAttemptedFactory(Block center, BlockFace clickedFace) {
-
         /*
         The logic behind this method is that is gets the opposite faces to the one you clicked,
         as according to how they're registered in FaceDirection. Also, any non-cardinal face direction is treated
@@ -41,15 +40,12 @@ public class BlockUtil {
         boolean isOneFurn = !chestsFound.isEmpty() && furnsFound.size() < 2;
 
         return isOneChest && isOneFurn;
-
     }
 
     public static boolean isFactoryBlock(Block block) {
-
         Material type = block.getType();
 
         return factoryMaterials.contains(type);
-
     }
 
     /*
@@ -57,23 +53,18 @@ public class BlockUtil {
      */
 
     public static List<Chest> getRelativeChests(Block block, Collection<BlockFace> blockFaces) {
-
         List<Block> relatives = getRelatives(block, blockFaces);
 
         return getChsFromList(relatives);
-
     }
 
     public static List<Furnace> getRelativeFurns(Block block, Collection<BlockFace> blockFaces) {
-
         List<Block> relatives = getRelatives(block, blockFaces);
 
         return getFurnsFromList(relatives);
-
     }
 
     private static List<Block> getRelatives(Block block, Collection<BlockFace> blockFaces) {
-
         List<Block> relatives = new ArrayList<>(blockFaces.size());
 
         for (BlockFace blockFace : blockFaces) {
@@ -83,11 +74,9 @@ public class BlockUtil {
         }
 
         return relatives;
-
     }
 
     private static List<Chest> getChsFromList(Collection<Block> blocks) {
-
         List<Chest> chests = new ArrayList<>(blocks.size());
 
         for (Block block : blocks) {
@@ -100,11 +89,9 @@ public class BlockUtil {
         }
 
         return chests;
-
     }
 
     private static List<Furnace> getFurnsFromList(Collection<Block> blocks) {
-
         List<Furnace> furnaces = new ArrayList<>(blocks.size());
 
         for (Block block : blocks) {
@@ -117,11 +104,9 @@ public class BlockUtil {
         }
 
         return furnaces;
-
     }
 
     private static boolean areUniqueBlocks(Collection<Block> blocks) {
-
         Set<Material> materials = new HashSet<>(blocks.size());
 
         for (Block block : blocks) {
@@ -131,7 +116,6 @@ public class BlockUtil {
         }
 
         return materials.size() == blocks.size();
-
     }
 
 }

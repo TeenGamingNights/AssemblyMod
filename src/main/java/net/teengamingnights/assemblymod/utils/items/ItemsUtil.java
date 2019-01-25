@@ -11,15 +11,11 @@ import java.util.stream.Collectors;
 public class ItemsUtil {
 
     public static void removeItemsFromInv(Inventory inventory, Collection<ItemStack> itemStacks) {
-
         itemStacks.forEach(inventory::remove);
-
     }
 
     public static List<ItemStack> sanitizeISList(Collection<ItemStack> itemStacks) {
-
         return itemStacks.parallelStream().filter(Predicate.isEqual(null)).collect(Collectors.toList());
-
     }
 
 }

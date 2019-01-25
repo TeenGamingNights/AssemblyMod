@@ -6,7 +6,7 @@ buildscript {
         jcenter()
     }
 
-    dependencies {
+dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
     }
@@ -26,6 +26,7 @@ repositories {
     maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url 'https://dl.bintray.com/kotlin/exposed' }
+    maven { url 'https://build.devotedmc.com/plugin/repository/everything/' }
 }
 
 dependencies {
@@ -37,6 +38,13 @@ dependencies {
 
     // Spigot
     compile 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
+
+    // Civcraft (Integration)
+    compile 'vg.civcraft.mc.civmodcore:CivModCore:1.6.0'
+    compile 'vg.civcraft.mc.namelayer:NameLayer:2.11.0'
+    compile 'vg.civcraft.mc:CivMenu:1.4.6'
+    compile 'vg.civcraft.mc.citadel:Citadel:3.9.0'
+    compile 'vg.civcraft.mc.namelayer:NameLayer:2.11.0'
 
     // Other libraries
     compile 'com.moandjiezana.toml:toml4j:0.7.2'
