@@ -8,6 +8,7 @@ import net.teengamingnights.assemblymod.sql.tables.FactoryRecipesStore
 import net.teengamingnights.assemblymod.sql.tables.FactoryStore
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.IOException
 import javax.sql.DataSource
 
@@ -46,6 +47,8 @@ class SQLManager(val config: Config) : Runnable {
 
         Database.connect(ds)
 
-        SchemaUtils.createMissingTablesAndColumns(*tables.map(DataStore::instance).toTypedArray())
+        transaction {
+            SchemaUtils.createMissingTablesAndColumns(*tables.map(DataStore::instance).toTypedArray())
+        }
     }
 }

@@ -13,6 +13,7 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.function.Consumer
 
 @ExperimentalCoroutinesApi
@@ -30,9 +31,11 @@ object FactoryRecipesStore : DataStore {
     @JvmStatic
     fun getRecipes(factory: Factory, callback: Consumer<List<Recipe>>) {
         async {
-            Store.select {
-                Store.factoryId eq factory.id
-            } get Store.recipeId
+            transaction {
+                Store.select {
+                    Store.factoryId eq factory.id
+                } get Store.recipeId
+            }
         }.onComplete { ids ->
             val recipes = Recipes.values().map(Recipes::recipe).filter { recipe -> ids.contains(recipe.id) }
             callback.accept(recipes)
@@ -41,8 +44,10 @@ object FactoryRecipesStore : DataStore {
 
     fun clearRecipes(factory: Factory) {
         launch {
-            Store.deleteWhere {
-                Store.factoryId eq factory.id
+            transaction {
+                Store.deleteWhere {
+                    Store.factoryId eq factory.id
+                }
             }
         }
     }
@@ -50,9 +55,11 @@ object FactoryRecipesStore : DataStore {
     fun addRecipes(factory: Factory, recipes: List<Recipe>) {
         launch {
             recipes.map(Recipe::getId).forEach { recipeId ->
-                Store.insert {
-                    it[Store.factoryId] = factory.id
-                    it[Store.recipeId] = recipeId
+                transaction {
+                    Store.insert {
+                        it[Store.factoryId] = factory.id
+                        it[Store.recipeId] = recipeId
+                    }
                 }
             }
         }
