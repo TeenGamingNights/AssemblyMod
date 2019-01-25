@@ -2,6 +2,7 @@ package net.teengamingnights.assemblymod.factory;
 
 import net.teengamingnights.assemblymod.utils.CollectionUtils;
 import net.teengamingnights.assemblymod.utils.items.ItemsUtil;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Furnace;
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FactoryManager {
@@ -21,6 +23,15 @@ public class FactoryManager {
 
     public List<Factory> getRegFactories() {
         return new ArrayList<>(factories);
+    }
+
+    public boolean factoryExistsAt(Location loc){
+        for (Factory fac : factories){
+            if(fac.getCenter().equals(loc)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void registerFactory(Factory factory) {
@@ -43,49 +54,45 @@ public class FactoryManager {
 
     public void createFactory(Block center, Chest chest, Furnace furnace) {
 
-        /*
-        I removed the nested for-loop in favor for a much cleaner (and theoretically faster) alternative.
-        I also made it so that the chest will remove the ingredients on factory creation.
+        // Check if this factory already exists
+        if (factoryExistsAt(center.getLocation())){
+            System.out.println("Factory already exists at " + center.getLocation().toString());
+        }
 
-        The new way a suitable factory is searched for is it takes a list of all the factories (as it did before),
-        and removes the ones that do not match the ingredients in the chest).
-        At the end, if all the factories have been iterated upon and there is only one left, that will be the factory
-        that gets created.
-         */
-
-
-        /*
-         Imma be real honest actually, I just realize that the instances of Factories and the factory templates I've been
-         confusing the whole time so TODO: fix factory material logic.
-         I would do this now, but I'm tired out bc I've been coding for like 4 hours (which is honestly all for nothing bc
-         I just rewrote perfectly good code FUCK MY LIFE. /rant
-
-         Okay, so I put together something in Factory Type that hopefully differentiates between FactoryTypes and actual
-         Factories. But, it's probably going to need to be remade if we want creation costs to differ.
-          */
-
+        // Check if the chest is empty
+        // You have to iterate over it because the array will always have 27 elements, but they will be null if empty.
         List<ItemStack> fItems = Arrays.asList(chest.getBlockInventory().getContents());
-        fItems.removeIf(Predicate.isEqual(null));
+        boolean empty = true;
+        for (ItemStack is : fItems){
+            if (is != null){
+                empty = false;
+                break;
+            }
+        }
+        if (empty) return;
 
-        if (fItems.isEmpty()) return;
 
-        Stream<FactoryType> suitables = factoryTypes
+        // Get factories with requirements matching those found in the chest.
+        // If there are no factories that match, or more than 1, return because that shouldn't happen.
+        List<FactoryType> suitables = factoryTypes
                 .clone()
                 .parallelStream()
-                .filter(type -> requirementsMet(type, fItems));
+                .filter(type -> requirementsMet(type, fItems))
+                .collect(Collectors.toList());
+        if (suitables.size() != 1) return;
+        FactoryType typeToBeMade = suitables.get(0);
 
-        if (suitables.count() != 1) return;
-
-        FactoryType typeToBeMade = suitables.collect(CollectionUtils.toSingleton());
-
+        // Now that we know which factory to make, remove the required items from the chest, and print some juicy debug
         ItemsUtil.removeItemsFromInv(chest.getBlockInventory(), typeToBeMade.getCreationCost());
         System.out.println("[DEBUG] Created a " + typeToBeMade.getName() + " factory at " + center.getLocation().toString());
 
     }
 
     /*
-    I'mma be real with you; I don't know if this works... I theory it should, but with the quirkiness of ItemStack's and
-    their ItemMeta... I dunno.
+    Check if the List provided contains the materials required to create a factory. Due to how ItemStacks work,
+    you need the exact number of materials in the chest in the exact same configuration (but not necessarily the same order)
+    e.g. if the requirements are (10 cobble, 4 wood) this will return false if the chest contains (2 stacks of 5 cobble, 4 wood),
+    but will return true if the chest contains (10 cobble, 4 wood, 8 wool). so. TODO: find a workaround for this crap.
      */
     private boolean requirementsMet(FactoryType type, List<ItemStack> materials) {
 

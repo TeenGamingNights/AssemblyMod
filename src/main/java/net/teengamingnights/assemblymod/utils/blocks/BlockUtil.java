@@ -95,7 +95,7 @@ public class BlockUtil {
             Material type = block.getType();
             Material chest = Material.CHEST;
 
-            if (type.equals(chest)) chests.add((Chest) block);
+            if (type.equals(chest)) chests.add((Chest) block.getState());
 
         }
 
@@ -112,7 +112,7 @@ public class BlockUtil {
             Material type = block.getType();
             Material furnace = Material.FURNACE;
 
-            if (type.equals(furnace)) furnaces.add((Furnace) block);
+            if (type.equals(furnace)) furnaces.add((Furnace) block.getState());
 
         }
 

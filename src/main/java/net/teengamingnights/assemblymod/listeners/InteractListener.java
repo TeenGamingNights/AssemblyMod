@@ -33,10 +33,13 @@ public class InteractListener implements Listener {
           */
 
         ItemStack is = e.getItem();
-        Material isType = is.getType();
+
+        // Return if they didn't use their hand to interact
+        if (is!=null){
+            return;
+        }
         Action action = e.getAction();
 
-        if (isType != Material.STICK) return;
         if (action != Action.LEFT_CLICK_BLOCK) return;
 
         /*

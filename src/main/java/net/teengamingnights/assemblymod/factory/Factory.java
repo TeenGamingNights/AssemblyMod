@@ -22,4 +22,5 @@ public interface Factory {
     double getHealthLossMultiplier();
 
     List<ItemStack> getRequiredMaterials();
+
 }
