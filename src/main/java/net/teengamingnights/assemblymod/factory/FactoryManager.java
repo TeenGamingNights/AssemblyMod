@@ -43,17 +43,14 @@ public class FactoryManager {
     }
 
     public boolean isBlockFac(Block centerBlock) {
-
         return getRegFactories()
                 .parallelStream()
                 .anyMatch(factory -> factory.getCenter().equals(centerBlock.getLocation()));
-
     }
 
     // I made it so that the chest and furnace can be added to the factory object for future manipulation
 
     public void createFactory(Block center, Chest chest, Furnace furnace) {
-
         // Check if this factory already exists
         if (factoryExistsAt(center.getLocation())){
             System.out.println("Factory already exists at " + center.getLocation().toString());
@@ -71,7 +68,6 @@ public class FactoryManager {
         }
         if (empty) return;
 
-
         // Get factories with requirements matching those found in the chest.
         // If there are no factories that match, or more than 1, return because that shouldn't happen.
         List<FactoryType> suitables = factoryTypes
@@ -85,7 +81,6 @@ public class FactoryManager {
         // Now that we know which factory to make, remove the required items from the chest, and print some juicy debug
         ItemsUtil.removeItemsFromInv(chest.getBlockInventory(), typeToBeMade.getCreationCost());
         System.out.println("[DEBUG] Created a " + typeToBeMade.getName() + " factory at " + center.getLocation().toString());
-
     }
 
     /*
@@ -95,11 +90,8 @@ public class FactoryManager {
     but will return true if the chest contains (10 cobble, 4 wood, 8 wool). so. TODO: find a workaround for this crap.
      */
     private boolean requirementsMet(FactoryType type, List<ItemStack> materials) {
-
         List<ItemStack> requirements = type.getCreationCost();
-
         return materials.containsAll(requirements);
-
     }
 
 }
