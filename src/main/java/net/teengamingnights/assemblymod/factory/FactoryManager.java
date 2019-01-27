@@ -1,6 +1,5 @@
 package net.teengamingnights.assemblymod.factory;
 
-import net.teengamingnights.assemblymod.utils.CollectionUtils;
 import net.teengamingnights.assemblymod.utils.items.ItemsUtil;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -12,21 +11,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class FactoryManager {
 
-    private List<Factory> factories = new ArrayList<>();
+    private List<IFactory> factories = new ArrayList<>();
     private EnumSet<FactoryType> factoryTypes = EnumSet.allOf(FactoryType.class);
 
-    public List<Factory> getRegFactories() {
+    public List<IFactory> getRegFactories() {
         return new ArrayList<>(factories);
     }
 
     public boolean factoryExistsAt(Location loc){
-        for (Factory fac : factories){
+        for (IFactory fac : factories){
             if(fac.getCenter().equals(loc)){
                 return true;
             }
@@ -34,21 +31,28 @@ public class FactoryManager {
         return false;
     }
 
-    public void registerFactory(Factory factory) {
-        factories.add(factory);
-    }
-
-    public void unregisterFactory(Factory factory) {
-        factories.remove(factory);
-    }
-
-    public boolean isBlockFac(Block centerBlock) {
+    public IFactory getFactoryAt(Location loc){
         return getRegFactories()
                 .parallelStream()
-                .anyMatch(factory -> factory.getCenter().equals(centerBlock.getLocation()));
+                .filter(factory -> factory.contains(loc))
+                .findAny().orElse(null);
     }
 
-    // I made it so that the chest and furnace can be added to the factory object for future manipulation
+    public void registerFactory(IFactory factory) {
+        factories.add(factory);
+        System.out.println("[DEBUG] Created a " + factory.getType().getName() + " factory at " + factory.getCenter().toString());
+    }
+
+    public void unregisterFactory(IFactory factory) {
+        factories.remove(factory);
+        System.out.println("[DEBUG] Unregistered a factory at " + factory.getCenter().toString());
+    }
+
+    public boolean isBlockFac(Block block) {
+        return getRegFactories()
+                .parallelStream()
+                .anyMatch(factory -> factory.contains(block.getLocation()));
+    }
 
     public void createFactory(Block center, Chest chest, Furnace furnace) {
         // Check if this factory already exists
@@ -78,9 +82,9 @@ public class FactoryManager {
         if (suitables.size() != 1) return;
         FactoryType typeToBeMade = suitables.get(0);
 
-        // Now that we know which factory to make, remove the required items from the chest, and print some juicy debug
+        // Now that we know which factory to make, remove the required items from the chest, and register it.
         ItemsUtil.removeItemsFromInv(chest.getBlockInventory(), typeToBeMade.getCreationCost());
-        System.out.println("[DEBUG] Created a " + typeToBeMade.getName() + " factory at " + center.getLocation().toString());
+        registerFactory(new Factory(typeToBeMade, center.getLocation(), chest.getLocation(), furnace.getLocation()));
     }
 
     /*

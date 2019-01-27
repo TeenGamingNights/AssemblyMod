@@ -1,8 +1,8 @@
 package net.teengamingnights.assemblymod.sql.tables
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import net.teengamingnights.assemblymod.factory.Factory
-import net.teengamingnights.assemblymod.factory.recipes.Recipe
+import net.teengamingnights.assemblymod.factory.IFactory
+import net.teengamingnights.assemblymod.factory.IRecipe
 import net.teengamingnights.assemblymod.factory.recipes.Recipes
 import net.teengamingnights.assemblymod.sql.DataStore
 import net.teengamingnights.assemblymod.sql.get
@@ -30,7 +30,7 @@ object FactoryRecipesStore : DataStore {
         get() = Store
 
     @JvmStatic
-    fun getRecipes(factory: Factory, callback: Consumer<List<Recipe>>) {
+    fun getRecipes(factory: IFactory, callback: Consumer<List<IRecipe>>) {
         async {
             transaction {
                 Store.select {
@@ -43,7 +43,7 @@ object FactoryRecipesStore : DataStore {
         }
     }
 
-    fun clearRecipes(factory: Factory) {
+    fun clearRecipes(factory: IFactory) {
         launch {
             transaction {
                 Store.deleteWhere {
@@ -53,9 +53,9 @@ object FactoryRecipesStore : DataStore {
         }
     }
 
-    fun addRecipes(factory: Factory, recipes: List<Recipe>) {
+    fun addRecipes(factory: IFactory, recipes: List<IRecipe>) {
         launch {
-            recipes.map(Recipe::getId).forEach { recipeId ->
+            recipes.map(IRecipe::getId).forEach { recipeId ->
                 transaction {
                     Store.insert {
                         it[Store.factoryId] = factory.id
