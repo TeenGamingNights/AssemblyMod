@@ -6,76 +6,22 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.UUID;
 
-public class Factory implements IFactory {
-    /*So basically, when you want to make a new factory just extend this class. Most factories won't need to override anything,
-      but when we do it like this it gives the option to allow factories to override methods and do fancier things.
-     */
+public interface Factory {
+    UUID getId();
 
-    // Private fields.
-    private Location furnace;
-    private Location center;
-    private Location chest;
-    private UUID id;
-    private double health;
-    private FactoryType type;
-    private List<ItemStack> requirements;
-    private List<IRecipe> recipes;
-    private double healthLossMultiplier;
+    Location getCenter();
 
-    @Override
-    public UUID getId() {
-        return id;
-    }
+    Location getFurnace();
 
-    @Override
-    public Location getCenter() {
-        return center;
-    }
+    Location getChest();
 
-    @Override
-    public Location getFurnace() {
-        return furnace;
-    }
+    FactoryType getType();
 
-    @Override
-    public Location getChest() {
-        return chest;
-    }
+    double getHealth();
 
-    @Override
-    public FactoryType getType() {
-        return type;
-    }
+    double getHealthLossMultiplier();
 
-    @Override
-    public double getHealth() {
-        return health;
-    }
+    List<ItemStack> getRequiredMaterials();
 
-    @Override
-    public double getHealthLossMultiplier() {
-        return healthLossMultiplier;
-    }
-
-    @Override
-    public List<ItemStack> getRequiredMaterials() {
-        return requirements;
-    }
-
-    @Override
-    public boolean contains(Location loc) {
-        return loc.equals(center) || loc.equals(furnace) || loc.equals(chest);
-    }
-
-    public Factory(FactoryType ft, Location center, Location chest, Location furnace){
-        this.center = center;
-        this.furnace = furnace;
-        this.chest = chest;
-        this.type = ft;
-        this.id = UUID.randomUUID();
-
-        this.health = type.getStartingHealth();
-        this.healthLossMultiplier = type.getHlMultiplier();
-        this.requirements = type.getCreationCost();
-    }
+    boolean contains(Location loc);
 }

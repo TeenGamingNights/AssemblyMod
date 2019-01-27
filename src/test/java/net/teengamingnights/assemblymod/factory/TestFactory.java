@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class TestFactory implements IFactory {
+public class TestFactory implements Factory {
     @Override
     public UUID getId() {
         return null;

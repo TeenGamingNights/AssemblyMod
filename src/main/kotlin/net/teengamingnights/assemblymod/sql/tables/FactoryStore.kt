@@ -2,7 +2,7 @@ package net.teengamingnights.assemblymod.sql.tables
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import net.teengamingnights.assemblymod.factory.IFactory
+import net.teengamingnights.assemblymod.factory.Factory
 import net.teengamingnights.assemblymod.sql.DataStore
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.insert
@@ -23,7 +23,7 @@ object FactoryStore : DataStore {
     override val instance: Table
         get() = Store
 
-    fun createFactory(factory: IFactory) {
+    fun createFactory(factory: Factory) {
         GlobalScope.launch {
             transaction {
                 Store.insert {

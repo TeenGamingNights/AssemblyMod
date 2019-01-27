@@ -15,15 +15,15 @@ import java.util.stream.Collectors;
 
 public class FactoryManager {
 
-    private List<IFactory> factories = new ArrayList<>();
+    private List<Factory> factories = new ArrayList<>();
     private EnumSet<FactoryType> factoryTypes = EnumSet.allOf(FactoryType.class);
 
-    public List<IFactory> getRegFactories() {
+    public List<Factory> getRegFactories() {
         return new ArrayList<>(factories);
     }
 
     public boolean factoryExistsAt(Location loc){
-        for (IFactory fac : factories){
+        for (Factory fac : factories){
             if(fac.getCenter().equals(loc)){
                 return true;
             }
@@ -31,19 +31,19 @@ public class FactoryManager {
         return false;
     }
 
-    public IFactory getFactoryAt(Location loc){
+    public Factory getFactoryAt(Location loc){
         return getRegFactories()
                 .parallelStream()
                 .filter(factory -> factory.contains(loc))
                 .findAny().orElse(null);
     }
 
-    public void registerFactory(IFactory factory) {
+    public void registerFactory(Factory factory) {
         factories.add(factory);
         System.out.println("[DEBUG] Created a " + factory.getType().getName() + " factory at " + factory.getCenter().toString());
     }
 
-    public void unregisterFactory(IFactory factory) {
+    public void unregisterFactory(Factory factory) {
         factories.remove(factory);
         System.out.println("[DEBUG] Unregistered a factory at " + factory.getCenter().toString());
     }
@@ -84,7 +84,7 @@ public class FactoryManager {
 
         // Now that we know which factory to make, remove the required items from the chest, and register it.
         ItemsUtil.removeItemsFromInv(chest.getBlockInventory(), typeToBeMade.getCreationCost());
-        registerFactory(new Factory(typeToBeMade, center.getLocation(), chest.getLocation(), furnace.getLocation()));
+        registerFactory(new BasicFactory(typeToBeMade, center.getLocation(), chest.getLocation(), furnace.getLocation()));
     }
 
     /*

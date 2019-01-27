@@ -6,6 +6,6 @@ import org.bukkit.inventory.ItemStack;
 import static java.util.Arrays.asList;
 
 public class Recipes {
-    static Recipe STONE = new Recipe(0, asList(new ItemStack(Material.COBBLESTONE, 64)), asList(new ItemStack(Material.STONE, 64)));
+    static Recipe STONE = new BasicRecipe(0, asList(new ItemStack(Material.COBBLESTONE, 64)), asList(new ItemStack(Material.STONE, 64)));
 
 }

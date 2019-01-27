@@ -1,7 +1,7 @@
 package net.teengamingnights.assemblymod.factory.recipes
 
-import net.teengamingnights.assemblymod.factory.IRecipe
+import net.teengamingnights.assemblymod.factory.Recipe
 
-enum class Recipes(val recipe: IRecipe) {
+enum class Recipes(val recipe: Recipe) {
 
 }

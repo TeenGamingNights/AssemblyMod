@@ -20,9 +20,9 @@ public enum FactoryType {
     private final List<ItemStack> creationCost;
     private final double startingHealth;
     private final double hlMultiplier;
-    private final List<IRecipe> recipes;
+    private final List<Recipe> recipes;
 
-    FactoryType(String name, List<ItemStack> cost, double health, double lossFactor, List<IRecipe> recipes) {
+    FactoryType(String name, List<ItemStack> cost, double health, double lossFactor, List<Recipe> recipes) {
 
         this.typeName = name;
         this.creationCost = cost;
