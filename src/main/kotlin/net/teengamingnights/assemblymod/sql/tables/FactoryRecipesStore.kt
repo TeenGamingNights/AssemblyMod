@@ -20,7 +20,8 @@ import java.util.function.Consumer
 object FactoryRecipesStore : DataStore {
 
     private object Store : Table("factoryrecipes") {
-        val pairId = integer("ID").primaryKey().uniqueIndex().autoIncrement()
+        // This line was causing errors for me and was unused so I commented it out.
+        //val pairId = integer("ID").primaryKey().uniqueIndex().autoIncrement()
         val factoryId = uuid("FACTORYID")
         val recipeId = integer("RECIPEID")
     }

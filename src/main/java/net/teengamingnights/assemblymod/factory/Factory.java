@@ -11,6 +11,10 @@ public interface Factory {
 
     Location getCenter();
 
+    Location getFurnace();
+
+    Location getChest();
+
     FactoryType getType();
 
     double getHealth();
@@ -18,4 +22,5 @@ public interface Factory {
     double getHealthLossMultiplier();
 
     List<ItemStack> getRequiredMaterials();
+
 }
