@@ -104,7 +104,6 @@ public class BasicFactory implements Factory {
     // This function is called when a user toggles a factory on or off
     @Override
     public void toggle(){
-        System.out.println("On toggle");
         if(enabled)
             onDisable();
         else
@@ -123,7 +122,6 @@ public class BasicFactory implements Factory {
 
     // This is called when a user turns on the factory
     private void onEnable(){
-        System.out.println("On enable");
         if (!consumeFuel()) return;
         enabled = true;
         resetTimers();
@@ -134,7 +132,6 @@ public class BasicFactory implements Factory {
 
     // This is called when a user turns off a factory
     private void onDisable(){
-        System.out.println("On Disable");
         enabled = false;
         Furnace furn = (Furnace) furnace.getBlock().getState();
         furn.setBurnTime((short) 0);
@@ -145,7 +142,6 @@ public class BasicFactory implements Factory {
 
     // Tried to consume a piece of charcoal in the furnace. returns true if successful, false if there isn't any charcoal.
     private boolean consumeFuel(){
-        System.out.print("Consuming fuel ");
         Furnace furnace = (Furnace) this.furnace.getBlock().getState();
         Inventory inv = ((Container)furnace).getInventory();
         ItemStack[] items = inv.getContents();
@@ -165,7 +161,6 @@ public class BasicFactory implements Factory {
     }
 
     private void doOutput(){
-        System.out.println("DoOutput()");
         Chest c = (Chest) chest.getBlock().getState();
         for (ItemStack i : currentRecipe.getProduct()){
             c.getInventory().addItem(i);
