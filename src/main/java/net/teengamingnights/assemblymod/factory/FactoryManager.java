@@ -25,9 +25,9 @@ public class FactoryManager {
         return new ArrayList<>(factories);
     }
 
-    public boolean factoryExistsAt(Location loc){
-        for (Factory fac : factories){
-            if(fac.getCenter().equals(loc)){
+    public boolean factoryExistsAt(Location loc) {
+        for (Factory fac : factories) {
+            if (fac.getCenter().equals(loc)) {
                 return true;
             }
         }
@@ -52,7 +52,7 @@ public class FactoryManager {
 
     public void createFactory(Block center, Chest chest, Furnace furnace) {
         // Check if this factory already exists
-        if (factoryExistsAt(center.getLocation())){
+        if (factoryExistsAt(center.getLocation())) {
             System.out.println("Factory already exists at " + center.getLocation().toString());
         }
 
@@ -60,8 +60,8 @@ public class FactoryManager {
         // You have to iterate over it because the array will always have 27 elements, but they will be null if empty.
         List<ItemStack> fItems = Arrays.asList(chest.getBlockInventory().getContents());
         boolean empty = true;
-        for (ItemStack is : fItems){
-            if (is != null){
+        for (ItemStack is : fItems) {
+            if (is != null) {
                 empty = false;
                 break;
             }
