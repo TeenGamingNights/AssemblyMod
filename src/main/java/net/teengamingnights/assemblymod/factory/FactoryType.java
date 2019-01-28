@@ -65,4 +65,8 @@ public enum FactoryType {
         return refund;
     }
 
+    public Recipe[] getRecipes(){
+        return (Recipe[]) this.recipes.toArray();
+    }
+
 }

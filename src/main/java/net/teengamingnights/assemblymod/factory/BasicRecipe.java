@@ -31,9 +31,10 @@ public class BasicRecipe implements Recipe {
         return duration;
     }
 
-    public BasicRecipe(int id, List<ItemStack> cost, List<ItemStack> product) {
+    public BasicRecipe(int id, List<ItemStack> cost, List<ItemStack> product, int duration) {
         this.id = id;
         this.cost = cost;
         this.product = product;
+        this.duration = duration;
     }
 }
