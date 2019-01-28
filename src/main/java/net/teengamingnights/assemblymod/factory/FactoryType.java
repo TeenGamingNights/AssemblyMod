@@ -56,4 +56,13 @@ public enum FactoryType {
 
     }
 
+    public ItemStack[] getRefund(double health){
+        ItemStack[] refund = new ItemStack[creationCost.size()];
+        for (int i = 0; i < refund.length; i++){
+            ItemStack item = creationCost.get(i);
+            refund[i] = new ItemStack(item.getType(), (int)Math.floor(item.getAmount()/2));
+        }
+        return refund;
+    }
+
 }

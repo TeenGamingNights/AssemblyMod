@@ -9,6 +9,7 @@ public class BasicRecipe implements Recipe {
     private int id;
     private List<ItemStack> cost;
     private List<ItemStack> product;
+    private int duration;
 
     @Override
     public int getId() {
@@ -23,6 +24,11 @@ public class BasicRecipe implements Recipe {
     @Override
     public List<ItemStack> getProduct() {
         return product;
+    }
+
+    @Override
+    public int getDuration(){
+        return duration;
     }
 
     public BasicRecipe(int id, List<ItemStack> cost, List<ItemStack> product) {

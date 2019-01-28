@@ -1,6 +1,11 @@
 package net.teengamingnights.assemblymod.factory;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Container;
+import org.bukkit.block.Furnace;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -21,6 +26,8 @@ public class BasicFactory implements Factory {
     private List<ItemStack> requirements;
     private List<Recipe> recipes;
     private double healthLossMultiplier;
+    private boolean enabled;
+    private Recipe currentRecipe;
 
     @Override
     public UUID getId() {
@@ -67,6 +74,11 @@ public class BasicFactory implements Factory {
         return loc.equals(center) || loc.equals(furnace) || loc.equals(chest);
     }
 
+    @Override
+    public boolean getEnabled(){
+        return enabled;
+    }
+
     public BasicFactory(FactoryType ft, Location center, Location chest, Location furnace){
         this.center = center;
         this.furnace = furnace;
@@ -77,5 +89,63 @@ public class BasicFactory implements Factory {
         this.health = type.getStartingHealth();
         this.healthLossMultiplier = type.getHlMultiplier();
         this.requirements = type.getCreationCost();
+
+        toggle();
+    }
+
+    // This function is called when a user toggles a factory on or off
+    @Override
+    public void toggle(){
+        if(enabled)
+            onDisable();
+        else
+            onEnable();
+    }
+
+    @Override
+    public Recipe getCurrentRecipe(){
+        return currentRecipe;
+    }
+
+    @Override
+    public void setRecipe(Recipe recipe){
+        this.currentRecipe = recipe;
+    }
+
+    // This is called when a user turns on the factory
+    private void onEnable(){
+        if (!consumeFuel()) return;
+        enabled = true;
+        Furnace furn = (Furnace) furnace.getBlock().getState();
+        furn.setBurnTime((short) 1600);
+        furn.update();
+    }
+
+    // This is called when a user turns off a factory
+    private void onDisable(){
+        enabled = false;
+        Furnace furn = (Furnace) furnace.getBlock().getState();
+        furn.setBurnTime((short) 0);
+        furn.update();
+    }
+
+    // Tried to consume a piece of charcoal in the furnace. returns true if successful, false if there isn't any charcoal.
+    // TODO: Put this on a loop so when one piece of fuel is done burning it checks again.
+    private boolean consumeFuel(){
+        Furnace furnace = (Furnace) this.furnace.getBlock().getState();
+        Inventory inv = ((Container)furnace).getInventory();
+        ItemStack[] items = inv.getContents();
+        boolean fueled = false;
+        for(int i = 0; i < items.length; i++){
+            ItemStack item = items[i];
+            if (item != null && item.getType() == Material.CHARCOAL){
+                // Valid fuel source found
+                fueled = true;
+                items[i].setAmount(item.getAmount()-1);
+                inv.setContents(items);
+                break;
+            }
+        }
+        return fueled;
     }
 }

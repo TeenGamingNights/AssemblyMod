@@ -1,5 +1,6 @@
 package net.teengamingnights.assemblymod.listeners;
 
+import net.teengamingnights.assemblymod.factory.Factory;
 import net.teengamingnights.assemblymod.factory.FactoryManager;
 import net.teengamingnights.assemblymod.utils.blocks.BlockUtil;
 import net.teengamingnights.assemblymod.utils.blocks.FaceDirection;
@@ -13,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -53,7 +55,7 @@ public class InteractListener implements Listener {
 
             case FURNACE:
                 // Enable / Disable the factory.
-                toggleFactory();
+                toggleFactory(b.getLocation());
                 break;
 
             case CHEST:
@@ -70,8 +72,19 @@ public class InteractListener implements Listener {
         if (!BlockUtil.isFactoryBlock(e.getBlock())) return;
         if (!factoryManager.isBlockFac(e.getBlock())) return;
 
-        // The destroyed block was part of a factory, so unregister it.
-        factoryManager.unregisterFactory(factoryManager.getFactoryAt(e.getBlock().getLocation()));
+        // The destroyed block was part of a factory, so unregister it and do the refund
+        Factory fac = factoryManager.getFactoryAt(e.getBlock().getLocation());
+        factoryManager.unregisterFactory(fac);
+        for(ItemStack item : fac.getType().getRefund(fac.getHealth()))
+            e.getBlock().getWorld().dropItem(e.getBlock().getLocation(), item);
+    }
+
+    @EventHandler
+    public void onFurnaceBurn(FurnaceBurnEvent e){
+        if(factoryManager.isBlockFac(e.getBlock())){
+            // The furnace that just got coal is part of a factory and shouldn't burn it
+            //e.setCancelled(true);
+        }
     }
 
 
@@ -88,11 +101,9 @@ public class InteractListener implements Listener {
         }
     }
 
-    private void toggleFactory() {
-
-        // TODO: stub method - have to implement click behavior later
-        return;
-
+    private void toggleFactory(Location loc) {
+        Factory f = factoryManager.getFactoryAt(loc);
+        f.toggle();
     }
 
     private void viewRecipes() {

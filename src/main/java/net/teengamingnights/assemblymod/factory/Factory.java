@@ -24,4 +24,12 @@ public interface Factory {
     List<ItemStack> getRequiredMaterials();
 
     boolean contains(Location loc);
+
+    boolean getEnabled();
+
+    Recipe getCurrentRecipe();
+
+    void setRecipe(Recipe recipe);
+
+    void toggle();
 }
