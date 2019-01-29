@@ -37,6 +37,8 @@ public class BasicFactory implements Factory {
     private BukkitRunnable productTimer;
     private int charcoalTime;
 
+    private int selectedRecipe; // TEMPORARY UNTIL THE GUI IS WORKING
+
     @Override
     public UUID getId() {
         return id;
@@ -226,5 +228,12 @@ public class BasicFactory implements Factory {
         Furnace furn = (Furnace) furnace.getBlock().getState();
         furn.setBurnTime((short) 1700);
         furn.update();
+    }
+
+    // TEMPORARY UNTIL GUI SELECTION IS WORKING
+    public void nextRecipe(){
+        selectedRecipe = (selectedRecipe+1)%type.getRecipes().length;
+        currentRecipe = type.getRecipes()[selectedRecipe];
+        System.out.println("Selected recipe with ID:" + currentRecipe.getId());
     }
 }

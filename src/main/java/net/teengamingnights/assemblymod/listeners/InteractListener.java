@@ -1,5 +1,6 @@
 package net.teengamingnights.assemblymod.listeners;
 
+import net.teengamingnights.assemblymod.factory.BasicFactory;
 import net.teengamingnights.assemblymod.factory.Factory;
 import net.teengamingnights.assemblymod.factory.FactoryManager;
 import net.teengamingnights.assemblymod.utils.blocks.BlockUtil;
@@ -61,6 +62,8 @@ public class InteractListener implements Listener {
 
             case CHEST:
                 // Bring up recipe list.
+                if(factoryManager.isBlockFac(b))
+                    ((BasicFactory)factoryManager.getFactoryAt(b.getLocation())).nextRecipe(); // TEMPORARY UNTIL GUI SELECTION IS WORKING
                 viewRecipes();
                 break;
                 

@@ -12,7 +12,7 @@ public enum FactoryType {
             new ArrayList<ItemStack>(asList(new ItemStack(Material.COBBLESTONE, 8))),
             100,
             10,
-            asList(Recipes.STONE));
+            asList(Recipes.STONE, Recipes.STONE_BRICKS, Recipes.RAILS));
 
     // This really isn't ideal, but I hope y'all can understand what I'm trying to do here.
 
