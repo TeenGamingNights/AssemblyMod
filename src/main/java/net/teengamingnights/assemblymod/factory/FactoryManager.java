@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Furnace;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -60,24 +61,15 @@ public class FactoryManager {
             System.out.println("Factory already exists at " + center.getLocation().toString());
         }
 
-        // Check if the chest is empty
-        // You have to iterate over it because the array will always have 27 elements, but they will be null if empty.
+        Inventory inv = chest.getBlockInventory();
         List<ItemStack> fItems = Arrays.asList(chest.getBlockInventory().getContents());
-        boolean empty = true;
-        for (ItemStack is : fItems){
-            if (is != null){
-                empty = false;
-                break;
-            }
-        }
-        if (empty) return;
 
         // Get factories with requirements matching those found in the chest.
         // If there are no factories that match, or more than 1, return because that shouldn't happen.
         List<FactoryType> suitables = factoryTypes
                 .clone()
                 .parallelStream()
-                .filter(type -> requirementsMet(type, fItems))
+                .filter(type -> ItemsUtil.inventoryContains(inv, type.getCreationCost()))
                 .collect(Collectors.toList());
         if (suitables.size() != 1) return;
         FactoryType typeToBeMade = suitables.get(0);
@@ -85,17 +77,6 @@ public class FactoryManager {
         // Now that we know which factory to make, remove the required items from the chest, and register it.
         ItemsUtil.removeItemsFromInv(chest.getBlockInventory(), typeToBeMade.getCreationCost());
         registerFactory(new BasicFactory(typeToBeMade, center.getLocation(), chest.getLocation(), furnace.getLocation()));
-    }
-
-    /*
-    Check if the List provided contains the materials required to create a factory. Due to how ItemStacks work,
-    you need the exact number of materials in the chest in the exact same configuration (but not necessarily the same order)
-    e.g. if the requirements are (10 cobble, 4 wood) this will return false if the chest contains (2 stacks of 5 cobble, 4 wood),
-    but will return true if the chest contains (10 cobble, 4 wood, 8 wool). so. TODO: find a workaround for this crap.
-     */
-    private boolean requirementsMet(FactoryType type, List<ItemStack> materials) {
-        List<ItemStack> requirements = type.getCreationCost();
-        return materials.containsAll(requirements);
     }
 
 }

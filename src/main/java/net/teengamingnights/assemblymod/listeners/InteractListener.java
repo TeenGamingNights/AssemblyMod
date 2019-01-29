@@ -55,7 +55,7 @@ public class InteractListener implements Listener {
 
             case FURNACE:
                 // Enable / Disable the factory.
-                if(factoryManager.factoryExistsAt(b.getLocation()))
+                if(factoryManager.isBlockFac(b))
                     toggleFactory(b.getLocation());
                 break;
 

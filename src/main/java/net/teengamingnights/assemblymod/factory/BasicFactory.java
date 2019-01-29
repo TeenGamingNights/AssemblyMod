@@ -1,6 +1,7 @@
 package net.teengamingnights.assemblymod.factory;
 
 import net.teengamingnights.assemblymod.AssemblyMod;
+import net.teengamingnights.assemblymod.utils.items.ItemsUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,6 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -122,7 +124,9 @@ public class BasicFactory implements Factory {
 
     // This is called when a user turns on the factory
     private void onEnable(){
-        if (!consumeFuel()) return;
+        if (!canDoRecipe()) return;
+        consumeFuel();
+        consumeRecipe();
         enabled = true;
         resetTimers();
         furnaceOn();
@@ -156,7 +160,6 @@ public class BasicFactory implements Factory {
                 break;
             }
         }
-        System.out.println(fueled);
         return fueled;
     }
 
@@ -167,17 +170,42 @@ public class BasicFactory implements Factory {
         }
     }
 
-    private boolean checkRecipe(){
+    private boolean consumeRecipe(){
         // Try to consume the items required for the recipe
         // TODO: Placeholder
-        return true;
+        if(ItemsUtil.inventoryContains(((Chest)chest.getBlock().getState()).getBlockInventory(), currentRecipe.getCost())){
+            ItemsUtil.removeItemsFromInv(((Chest)chest.getBlock().getState()).getBlockInventory(), currentRecipe.getCost());
+            return true;
+        } else return false;
+    }
+
+    private boolean checkRecipe(){
+        return ItemsUtil.inventoryContains(((Chest)chest.getBlock().getState()).getInventory(), currentRecipe.getCost());
+    }
+
+    private boolean checkFuel(){
+        Furnace furnace = (Furnace) this.furnace.getBlock().getState();
+        Inventory inv = ((Container)furnace).getInventory();
+        ItemStack[] items = inv.getContents();
+        for(int i = 0; i < items.length; i++){
+            ItemStack item = items[i];
+            if (item != null && item.getType() == Material.CHARCOAL){
+                // Valid fuel source found
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean canDoRecipe(){
+        return checkRecipe() && checkFuel();
     }
 
     private void resetTimers(){
         this.fuelTimer = new BukkitRunnable() {
             @Override
             public void run() {
-                if (!consumeFuel())
+                if (!checkFuel() || !consumeFuel())
                     onDisable();
                 else
                     furnaceOn();
@@ -188,7 +216,7 @@ public class BasicFactory implements Factory {
             public void run() {
                 // Output the product, and if there's enough to start it again do that.
                 doOutput();
-                if (!checkRecipe())
+                if (!checkRecipe() || !consumeRecipe())
                     onDisable();
             }
         };
